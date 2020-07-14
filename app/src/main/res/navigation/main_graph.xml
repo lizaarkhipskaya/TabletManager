@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/listOfDrugsFragment">
+
+    <fragment
+        android:id="@+id/listOfDrugsFragment"
+        android:name="com.product.tabletmanager.view.fragment.ListOfDrugsFragment"
+        android:label="ListOfDrugsFragment" />
+    <fragment
+        android:id="@+id/drugInfoFragment"
+        android:name="com.product.tabletmanager.view.fragment.DrugInfoFragment"
+        android:label="DrugInfoFragment" />
+    <fragment
+        android:id="@+id/findDrugFragment"
+        android:name="com.product.tabletmanager.view.fragment.FindDrugFragment"
+        android:label="FindDrugFragment" />
+
+</navigation>
