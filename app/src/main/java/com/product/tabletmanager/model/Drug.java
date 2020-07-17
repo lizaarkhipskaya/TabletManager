@@ -8,6 +8,8 @@ import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Entity(tableName = "drug_table")
@@ -25,13 +27,13 @@ public class Drug implements Serializable {
     @TypeConverters(DateConverter.class)
     private Date mEndDate;
     @TypeConverters({DaysConverter.class})
-    private List<DAY_TIME> mDayTime;
+    private List<Calendar> mDayTime;
     @TypeConverters({DependsOnFoodConverter.class})
     private List<DEPENDS_ON_FOOD> mDependsOnFood;
 
     public Drug(FORM mForm, @NonNull String mName,
                 String mUserName, Date startDate, Date endDate, int mDosage,
-                List<DAY_TIME> mDayTime,
+                List<Calendar> mDayTime,
                 List<DEPENDS_ON_FOOD> mDependsOnFood) {
         this.mForm = mForm;
         this.mName = mName;
@@ -39,7 +41,10 @@ public class Drug implements Serializable {
         mStartDate = startDate;
         mEndDate = endDate;
         this.mDosage = mDosage;
-        this.mDayTime = mDayTime;
+        if(mDayTime == null) {
+            this.mDayTime = new ArrayList<>();
+            this.mDayTime.add(Calendar.getInstance());
+        }
         this.mDependsOnFood = mDependsOnFood;
     }
 
@@ -74,7 +79,7 @@ public class Drug implements Serializable {
         return mDosage;
     }
 
-    public List<DAY_TIME> getDayTime() {
+    public List<Calendar> getDayTime() {
         return mDayTime;
     }
 

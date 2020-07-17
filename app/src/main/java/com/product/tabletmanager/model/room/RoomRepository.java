@@ -1,6 +1,7 @@
 package com.product.tabletmanager.model.room;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -34,6 +35,7 @@ public class RoomRepository implements DrugRepository {
 
     @Override
     public LiveData<List<Drug>> getAllDrugs() {
+        Log.d("my_t", "getAllDrugs");
         return allDrugs;
     }
 

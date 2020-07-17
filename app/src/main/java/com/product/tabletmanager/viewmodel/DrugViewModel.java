@@ -9,6 +9,7 @@ import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugRepository;
 import com.product.tabletmanager.model.room.RoomRepository;
 
+import java.util.Calendar;
 import java.util.List;
 
 public class DrugViewModel extends ViewModel {
@@ -22,7 +23,7 @@ public class DrugViewModel extends ViewModel {
     public ObservableField<String> mName = new ObservableField<>();
     public String mUserName;
     public int mDosage;
-    public List<Drug.DAY_TIME> mDayTime;
+    public List<Calendar> mDayTime;
     public List<Drug.DEPENDS_ON_FOOD> mDependsOnFood;
 
     public DrugViewModel() {
