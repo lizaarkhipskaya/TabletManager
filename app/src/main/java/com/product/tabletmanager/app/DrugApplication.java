@@ -1,11 +1,6 @@
 package com.product.tabletmanager.app;
 
-import android.app.AlarmManager;
 import android.app.Application;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Room;
@@ -13,13 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.product.tabletmanager.AlarmReceiver;
-import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.room.DrugDatabase;
-import com.product.tabletmanager.model.room.RoomRepository;
-
-import java.util.Calendar;
-import java.util.List;
 
 public class DrugApplication extends Application {
 

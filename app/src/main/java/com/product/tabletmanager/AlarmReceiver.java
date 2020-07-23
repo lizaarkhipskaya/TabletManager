@@ -22,10 +22,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: This method is called when the BroadcastReceiver is receiving
-        // an Intent broadcast.
-        Log.d("my_t", "onReceive: " + intent.getStringExtra(TITLE_KEY));
-        showNotification(context,intent);
+        Log.d(LOG_TAG, "onReceive: " + intent.getStringExtra(TITLE_KEY)
+                + intent.getStringExtra(CONTENT_KEY));
+        showNotification(context, intent);
     }
 
     private void showNotification(Context context, Intent intent) {

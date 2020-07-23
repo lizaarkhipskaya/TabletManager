@@ -25,16 +25,14 @@ import com.product.tabletmanager.AlarmReceiver;
 import com.product.tabletmanager.R;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugListAdapter;
-import com.product.tabletmanager.model.room.RoomRepository;
 import com.product.tabletmanager.viewmodel.AllDrugsViewModel;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnClickListener {
+    private static final String LOG_TAG = ListOfDrugsFragment.class.getSimpleName();
 
-    private RecyclerView mDrugListRV;
     private DrugListAdapter drugListAdapter;
     private AllDrugsViewModel viewModel;
     private NavController mController;
@@ -52,36 +50,31 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
 
     private void scheduleAlarm(List<Drug> allDrugs) {
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-
-        Log.d("my_t", "all drugs "+ RoomRepository.getInstance().getAllDrugs().getValue());
-        if(allDrugs!= null){
+        Log.i(LOG_TAG, "scheduleAlarm: ");
+        if (allDrugs != null) {
             for (Drug drug :
                     allDrugs) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(Calendar.HOUR_OF_DAY, 14);
-                calendar.set(Calendar.MINUTE, 54);
+                if(drug.getDayTime()!= null)
+                for (Calendar calendar :
+                        drug.getDayTime()) {
+                    Intent alarmIntent = new Intent(getContext(), AlarmReceiver.class);
+                    alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
+                    alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), allDrugs.indexOf(drug), alarmIntent,
+                            0);
 
-
-                Intent alarmIntent = new Intent(getContext(), AlarmReceiver.class);
-                alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
-                alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), allDrugs.indexOf(drug), alarmIntent,
-                        0);
-
-                Random r = new Random();
-                int low = 10;
-                int high = 100;
-                int result = r.nextInt(high-low) + low;
-
-                Log.d("my_t", "setDayTime " + calendar.getTime().toString() + " " + drug.getName());
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis() + 1000*result , 2*1000, pendingIntent);
-/*                alarmManager.cancel(pendingIntent);*/
-
+                    if (pendingIntent != null) {
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                calendar.getTimeInMillis(), 2 * 1000, pendingIntent);
+                        Log.i(LOG_TAG, "scheduleAlarm: set repeating for time " + calendar.getTime().toString());
+                    } else {
+                        Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
+                    }
+                    /*                alarmManager.cancel(pendingIntent);*/
+                }
             }
         } else {
-            Log.d("my_t", "empty all drugs");
+            Log.d(LOG_TAG, "scheduleAlarm: empty drug list");
         }
     }
 
@@ -109,7 +102,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
             mController.navigate(R.id.drugInfoFragment, args);
         }));
 
-        mDrugListRV = view.findViewById(R.id.list_of_drugs_rv_drugs);
+        RecyclerView mDrugListRV = view.findViewById(R.id.list_of_drugs_rv_drugs);
         mDrugListRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mDrugListRV.setAdapter(drugListAdapter);
 
