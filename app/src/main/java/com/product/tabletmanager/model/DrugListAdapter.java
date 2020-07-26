@@ -3,9 +3,11 @@ package com.product.tabletmanager.model;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,9 +61,9 @@ public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHo
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView form;
+        ImageView form;
         TextView name;
-        ImageButton remove;
+        ImageView remove;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -71,9 +73,23 @@ public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHo
         }
 
         void bindView(Drug drug, View.OnClickListener listener) {
-            form.setText(drug.getForm().toString());
+            form.setImageResource(getImageResIdByForm(drug.getForm()));
             name.setText(drug.getName());
             remove.setOnClickListener(listener);
+        }
+
+        @DrawableRes
+        private int getImageResIdByForm(Drug.FORM form){
+            switch (form){
+                case PILL:
+                    return R.drawable.ic_pill;
+                case CAPSULE:
+                    return R.drawable.ic_capsule;
+                case LIQUID:
+                    return R.drawable.ic_liquid;
+                default:
+                    return R.drawable.ic_pill;
+            }
         }
     }
 

@@ -48,7 +48,7 @@ public class Drug implements Serializable {
         this.mDependsOnFood = mDependsOnFood;
     }
 
-    public enum FORM {PILL, MIXTURE, CAPSULE}
+    public enum FORM {PILL, LIQUID, CAPSULE}
 
     public enum DAY_TIME {MORNING, NOON, EVENING}
 

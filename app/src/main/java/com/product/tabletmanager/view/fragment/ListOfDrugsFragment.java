@@ -21,6 +21,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.product.tabletmanager.AlarmReceiver;
 import com.product.tabletmanager.R;
 import com.product.tabletmanager.model.Drug;
@@ -106,7 +107,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
         mDrugListRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mDrugListRV.setAdapter(drugListAdapter);
 
-        Button addNew = view.findViewById(R.id.list_of_drugs_btn_find_drug);
+        FloatingActionButton addNew = view.findViewById(R.id.list_of_drugs_btn_find_drug);
         addNew.setOnClickListener(
                 v -> {
                     mController.navigate(R.id.findDrugFragment);

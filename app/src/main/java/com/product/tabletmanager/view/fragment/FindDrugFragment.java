@@ -106,7 +106,7 @@ public class FindDrugFragment extends Fragment {
                             mDrugViewModel.selectForm(Drug.FORM.PILL);
                             break;
                         case R.id.form_mixture:
-                            mDrugViewModel.selectForm(Drug.FORM.MIXTURE);
+                            mDrugViewModel.selectForm(Drug.FORM.LIQUID);
                             break;
                         case R.id.form_capsule:
                             mDrugViewModel.selectForm(Drug.FORM.CAPSULE);
