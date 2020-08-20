@@ -50,6 +50,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setSmallIcon(androidx.core.R.drawable.notification_icon_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        manager.notify(NOTIFY_ID, builder.build());
+        manager.notify(intent.getStringExtra(TITLE_KEY).hashCode(), builder.build());
     }
 }

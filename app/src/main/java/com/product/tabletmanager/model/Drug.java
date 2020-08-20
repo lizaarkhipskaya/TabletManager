@@ -3,14 +3,15 @@ package com.product.tabletmanager.model;
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(tableName = "drug_table")
 public class Drug implements Serializable {
@@ -27,24 +28,23 @@ public class Drug implements Serializable {
     @TypeConverters(DateConverter.class)
     private Date mEndDate;
     @TypeConverters({DaysConverter.class})
-    private List<Calendar> mDayTime;
+    private Set<Calendar> mDayTime;
     @TypeConverters({DependsOnFoodConverter.class})
     private List<DEPENDS_ON_FOOD> mDependsOnFood;
 
-    public Drug(FORM mForm, @NonNull String mName,
-                String mUserName, Date startDate, Date endDate, int mDosage,
-                List<Calendar> mDayTime,
-                List<DEPENDS_ON_FOOD> mDependsOnFood) {
-        this.mForm = mForm;
-        this.mName = mName;
-        this.mUserName = mUserName;
+    public Drug(FORM form, @NonNull String name,
+                String userName, Date startDate, Date endDate, int dosage,
+                Set<Calendar> dayTime) {
+        mForm = form;
+        mName = name;
+        mUserName = userName;
         mStartDate = startDate;
         mEndDate = endDate;
-        this.mDosage = mDosage;
-        if(mDayTime == null) {
-            this.mDayTime = new ArrayList<>();
-            this.mDayTime.add(Calendar.getInstance());
-        }
+        mDosage = dosage;
+        mDayTime = dayTime;
+    }
+
+    public void setDependsOnFood(List<DEPENDS_ON_FOOD> mDependsOnFood) {
         this.mDependsOnFood = mDependsOnFood;
     }
 
@@ -79,7 +79,7 @@ public class Drug implements Serializable {
         return mDosage;
     }
 
-    public List<Calendar> getDayTime() {
+    public Set<Calendar> getDayTime() {
         return mDayTime;
     }
 

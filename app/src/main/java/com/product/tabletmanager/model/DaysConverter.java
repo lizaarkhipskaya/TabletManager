@@ -5,11 +5,12 @@ import androidx.room.TypeConverter;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DaysConverter {
     @TypeConverter
-    public String fromDayTime(List<Calendar> mDayTime) {
+    public String fromDayTime(Set<Calendar> mDayTime) {
         if (mDayTime != null)
             return mDayTime.stream().map(Calendar::getTimeInMillis).map(Object::toString)
                     .collect(Collectors.joining(","));
@@ -17,12 +18,12 @@ public class DaysConverter {
     }
 
     @TypeConverter
-    public List<Calendar> toDayTime(String data) {
+    public Set<Calendar> toDayTime(String data) {
         if (data != null)
             return Arrays.stream(data.split(",")).map(s -> {
                         Calendar calendar = Calendar.getInstance();
                         return calendar;
-                    }).collect(Collectors.toList());
+                    }).collect(Collectors.toSet());
         return null;
     }
 }

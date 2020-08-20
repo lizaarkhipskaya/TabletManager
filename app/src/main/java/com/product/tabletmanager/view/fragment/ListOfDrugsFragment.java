@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,12 +25,14 @@ import com.product.tabletmanager.AlarmReceiver;
 import com.product.tabletmanager.R;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugListAdapter;
+import com.product.tabletmanager.util.AlarmHelper;
 import com.product.tabletmanager.viewmodel.AllDrugsViewModel;
 
 import java.util.Calendar;
 import java.util.List;
 
-public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnClickListener {
+public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnClickListener,
+        DeleteDrugDialogFragment.DeleteDrugClickListener {
     private static final String LOG_TAG = ListOfDrugsFragment.class.getSimpleName();
 
     private DrugListAdapter drugListAdapter;
@@ -55,24 +56,24 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
         if (allDrugs != null) {
             for (Drug drug :
                     allDrugs) {
-                if(drug.getDayTime()!= null)
-                for (Calendar calendar :
-                        drug.getDayTime()) {
-                    Intent alarmIntent = new Intent(getContext(), AlarmReceiver.class);
-                    alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
-                    alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), allDrugs.indexOf(drug), alarmIntent,
-                            0);
+                if (drug.getDayTime() != null)
+                    for (Calendar calendar :
+                            drug.getDayTime()) {
+                        Intent alarmIntent = new Intent(getContext(), AlarmReceiver.class);
+                        alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
+                        alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), allDrugs.indexOf(drug), alarmIntent,
+                                0);
 
-                    if (pendingIntent != null) {
-                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                calendar.getTimeInMillis(), 2 * 1000, pendingIntent);
-                        Log.i(LOG_TAG, "scheduleAlarm: set repeating for time " + calendar.getTime().toString());
-                    } else {
-                        Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
+                        if (pendingIntent != null) {
+                            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                    calendar.getTimeInMillis(), 2 * 1000, pendingIntent);
+                            Log.i(LOG_TAG, "scheduleAlarm: set repeating for time " + calendar.getTime().toString());
+                        } else {
+                            Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
+                        }
+                        /*                alarmManager.cancel(pendingIntent);*/
                     }
-                    /*                alarmManager.cancel(pendingIntent);*/
-                }
             }
         } else {
             Log.d(LOG_TAG, "scheduleAlarm: empty drug list");
@@ -108,16 +109,20 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
         mDrugListRV.setAdapter(drugListAdapter);
 
         FloatingActionButton addNew = view.findViewById(R.id.list_of_drugs_btn_find_drug);
-        addNew.setOnClickListener(
-                v -> {
-                    mController.navigate(R.id.findDrugFragment);
-                }
-        );
+        addNew.setOnClickListener(v -> mController.navigate(R.id.findDrugFragment));
     }
 
     @Override
     public void onClick(View view, Drug drug) {
-        viewModel.clearDrug(drug);
+        viewModel.rememberDrugForClear(drug);
+        DeleteDrugDialogFragment fragment = DeleteDrugDialogFragment.newInstance(this);
+        fragment.show(getChildFragmentManager(), DeleteDrugDialogFragment.class.getSimpleName());
+    }
+
+    @Override
+    public void onDeleteClick() {
+        AlarmHelper.cancelAlarm(getContext(), viewModel.getDrugForClear());
+        viewModel.clearDrug();
         Toast.makeText(getContext(), "Remove drug successfully", Toast.LENGTH_SHORT).show();
     }
 }
