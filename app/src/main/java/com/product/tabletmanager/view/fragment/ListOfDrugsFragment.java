@@ -1,11 +1,7 @@
 package com.product.tabletmanager.view.fragment;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.product.tabletmanager.AlarmReceiver;
 import com.product.tabletmanager.R;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugListAdapter;
 import com.product.tabletmanager.util.AlarmHelper;
 import com.product.tabletmanager.viewmodel.AllDrugsViewModel;
-
-import java.util.Calendar;
-import java.util.List;
 
 public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnClickListener,
         DeleteDrugDialogFragment.DeleteDrugClickListener {
@@ -46,38 +38,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
 
         viewModel.getDrugsMediatorLiveDate().observe(this, list -> {
             drugListAdapter.setNewData(list);
-            scheduleAlarm(list);
         });
-    }
-
-    private void scheduleAlarm(List<Drug> allDrugs) {
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        Log.i(LOG_TAG, "scheduleAlarm: ");
-        if (allDrugs != null) {
-            for (Drug drug :
-                    allDrugs) {
-                if (drug.getDayTime() != null)
-                    for (Calendar calendar :
-                            drug.getDayTime()) {
-                        Intent alarmIntent = new Intent(getContext(), AlarmReceiver.class);
-                        alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
-                        alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), allDrugs.indexOf(drug), alarmIntent,
-                                0);
-
-                        if (pendingIntent != null) {
-                            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                    calendar.getTimeInMillis(), 2 * 1000, pendingIntent);
-                            Log.i(LOG_TAG, "scheduleAlarm: set repeating for time " + calendar.getTime().toString());
-                        } else {
-                            Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
-                        }
-                        /*                alarmManager.cancel(pendingIntent);*/
-                    }
-            }
-        } else {
-            Log.d(LOG_TAG, "scheduleAlarm: empty drug list");
-        }
     }
 
     @Nullable
