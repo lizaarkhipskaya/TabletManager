@@ -24,8 +24,7 @@ public class AlarmHelper {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
             alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
             alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time.hashCode(), alarmIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time.hashCode(), alarmIntent, 0);
 
             if (pendingIntent != null) {
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
