@@ -35,7 +35,7 @@ import java.util.Locale;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
-public class FindDrugFragment extends Fragment {
+public class FindDrugFragment extends Fragment implements TimeClickDialogFragment.OnPositiveButtonClick {
     private static final String LOG_TAG = FindDrugFragment.class.getSimpleName();
 
     private DrugViewModel mDrugViewModel;
@@ -67,8 +67,8 @@ public class FindDrugFragment extends Fragment {
                 Toast.makeText(getContext(), "Drug saved successfully", Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).popBackStack();
             } else {
-                Log.d(LOG_TAG, "error is save" + saved.toString());
-                Toast.makeText(getContext(), "Error is save", Toast.LENGTH_SHORT).show();
+                Log.d(LOG_TAG, "error in save" + saved.toString());
+                Toast.makeText(getContext(), "Error in save", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -80,14 +80,14 @@ public class FindDrugFragment extends Fragment {
 
         TimePickerDialog mTimePicker = new TimePickerDialog(getActivity(),
                 (timePicker, selectedHour, selectedMinute) -> {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTimeInMillis(SystemClock.currentThreadTimeMillis());
-                    calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
-                    calendar.set(Calendar.MINUTE, selectedMinute);
+                    Calendar selectedTime = Calendar.getInstance();
+                    selectedTime.setTimeInMillis(SystemClock.currentThreadTimeMillis());
+                    selectedTime.set(Calendar.HOUR_OF_DAY, selectedHour);
+                    selectedTime.set(Calendar.MINUTE, selectedMinute);
 
-                    mChosenTime = Calendar.getInstance().getTime();
+                    mChosenTime = selectedTime.getTime();
                     Log.d(LOG_TAG, "showTimePickerDialog: chosen time " + mChosenTime);
-                    mDrugViewModel.setDayTime(Calendar.getInstance());
+                    mDrugViewModel.setDayTime(selectedTime);
                     updateTimeView();
                 }, hour, minute, true);
         mTimePicker.setTitle("Select Time");
@@ -104,7 +104,16 @@ public class FindDrugFragment extends Fragment {
         TextView textView = new TextView(getContext());
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(getTimeStringByDate(mChosenTime));
-        mTimeRootView.addView(textView, Math.max(0, mTimeRootView.getChildCount() - 2));
+        textView.setOnClickListener(v -> {
+                    TimeClickDialogFragment fragment = TimeClickDialogFragment.newInstance(
+                            textView, this);
+                    fragment.show(getChildFragmentManager(), TimeClickDialogFragment.class.getSimpleName());
+                });
+        mTimeRootView.addView(textView, getTimeChildViewIndex(mTimeRootView));
+    }
+
+    private int getTimeChildViewIndex(ViewGroup parentView) {
+        return Math.max(0, parentView.getChildCount() - 1);
     }
 
 
@@ -165,6 +174,11 @@ public class FindDrugFragment extends Fragment {
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
+    @Override
+    public void onClick(View childView) {
+        mTimeRootView.removeView(childView);
     }
 }
 

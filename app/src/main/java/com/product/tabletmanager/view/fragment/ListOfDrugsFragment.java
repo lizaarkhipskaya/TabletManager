@@ -55,6 +55,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
 
         drugListAdapter = new DrugListAdapter(viewModel.getLiveData().getValue());
