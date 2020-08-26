@@ -24,12 +24,14 @@ public class AlarmHelper {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
             alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
             alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time.hashCode(), alarmIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                    getIdForPendingIntent(drug, time), alarmIntent, 0);
 
             if (pendingIntent != null) {
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                         time.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-                Log.d(LOG_TAG, "scheduleAlarm: set repeating for time " + time.getTime().toString());
+                Log.d(LOG_TAG, "scheduleAlarm: set repeating for " + drug.getName()+ " time "
+                        + time.getTime().toString());
             } else {
                 Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
             }
@@ -40,7 +42,7 @@ public class AlarmHelper {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         for (Calendar time : drug.getDayTime()) {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, time.hashCode(), alarmIntent,
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,  getIdForPendingIntent(drug, time), alarmIntent,
                     0);
 
             if (pendingIntent != null) {
@@ -56,5 +58,9 @@ public class AlarmHelper {
         for (Drug drug : drugs) {
             setAlarm(context, drug);
         }
+    }
+
+    private static int getIdForPendingIntent(Drug drug, Calendar time) {
+        return drug.getName().hashCode()+time.hashCode();
     }
 }
