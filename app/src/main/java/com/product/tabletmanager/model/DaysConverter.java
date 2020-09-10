@@ -22,6 +22,7 @@ public class DaysConverter {
         if (data != null)
             return Arrays.stream(data.split(",")).map(s -> {
                         Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis((Long.valueOf(s).longValue()));
                         return calendar;
                     }).collect(Collectors.toSet());
         return null;

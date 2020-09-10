@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugRepository;
 import com.product.tabletmanager.model.room.RoomRepository;
-import com.product.tabletmanager.util.AlarmHelper;
 
 import java.util.Calendar;
 import java.util.HashSet;
