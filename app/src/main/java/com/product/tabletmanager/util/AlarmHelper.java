@@ -25,7 +25,7 @@ public class AlarmHelper {
             alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
             alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    getIdForPendingIntent(drug, time), alarmIntent, 0);
+                    CommonUtils.getInstance().getIdentifier(drug, time), alarmIntent, 0);
 
             if (pendingIntent != null) {
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
@@ -42,8 +42,8 @@ public class AlarmHelper {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         for (Calendar time : drug.getDayTime()) {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,  getIdForPendingIntent(drug, time), alarmIntent,
-                    0);
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                    CommonUtils.getInstance().getIdentifier(drug, time), alarmIntent, 0);
 
             if (pendingIntent != null) {
                 Log.d(LOG_TAG, "cancelAlarm: " + time.getTime().toString());
@@ -58,9 +58,5 @@ public class AlarmHelper {
         for (Drug drug : drugs) {
             setAlarm(context, drug);
         }
-    }
-
-    private static int getIdForPendingIntent(Drug drug, Calendar time) {
-        return drug.getName().hashCode()+time.hashCode();
     }
 }

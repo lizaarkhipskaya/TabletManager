@@ -15,7 +15,6 @@ import androidx.core.app.NotificationManagerCompat;
 public class AlarmReceiver extends BroadcastReceiver {
 
     private static final String LOG_TAG = AlarmReceiver.class.getSimpleName();
-    private static final int NOTIFY_ID = 101;
 
     public static final String TITLE_KEY = "title";
     public static final String CONTENT_KEY = "content";
@@ -50,6 +49,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setSmallIcon(androidx.core.R.drawable.notification_icon_background)
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-        manager.notify(intent.getStringExtra(TITLE_KEY).hashCode(), builder.build());
+        manager.notify((int) System.currentTimeMillis(), builder.build()); //todo
     }
 }

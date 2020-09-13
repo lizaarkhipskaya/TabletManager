@@ -54,7 +54,7 @@ public class DrugInfoFragment extends Fragment {
         //  //((TextView) view.findViewById(R.id.drug_info_user_name)).setText(drug.getUserName());
         ((TextView) view.findViewById(R.id.drug_info_dosage)).setText(String.valueOf(drug.getDosage()));
         mTimeRV = view.findViewById(R.id.time_recycler_view);
-        mTimeRV.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        mTimeRV.setLayoutManager(new GridLayoutManager(getContext(), 2));
         setupAdapter();
     }
 
