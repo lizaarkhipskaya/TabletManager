@@ -161,6 +161,23 @@ public class FindDrugFragment extends Fragment implements TimeClickDialogFragmen
             }
         });
 
+        ((EditText) view.findViewById(R.id.drug_dosage)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mDrugViewModel.selectDosage(Integer.parseInt(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mDrugViewModel.selectDosage(Integer.parseInt(s.toString()));
+            }
+        });
+
+
         view.findViewById(R.id.drug_add_time).setOnClickListener(this::showTimePickerDialog);
         view.findViewById(R.id.drug_start_date).setOnClickListener(v ->
                 showDatePickerDialog(R.string.date_picker_dialog_title_start_day));

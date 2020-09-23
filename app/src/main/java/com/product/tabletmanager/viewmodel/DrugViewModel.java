@@ -31,7 +31,6 @@ public class DrugViewModel extends ViewModel {
     private Set<Calendar> mDayTime = new HashSet<>();
     private ObservableField<Calendar> mStartDate = new ObservableField<>();
     private ObservableField<Calendar> mDueDate = new ObservableField<>();
-    public List<Drug.DEPENDS_ON_FOOD> mDependsOnFood;
 
     public DrugViewModel() {
         mRepository = RoomRepository.getInstance();
@@ -89,6 +88,11 @@ public class DrugViewModel extends ViewModel {
 
     public void setDayTime(Calendar calendar) {
         mDayTime.add(calendar);
+        updateDrug();
+    }
+
+    public void selectDosage(int dosage) {
+        mDosage = dosage;
         updateDrug();
     }
 
