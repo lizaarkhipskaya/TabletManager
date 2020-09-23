@@ -1,5 +1,6 @@
 package com.product.tabletmanager.view.fragment;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -24,6 +25,7 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
 
 import com.product.tabletmanager.R;
+import com.product.tabletmanager.databinding.FragmentFindDrugBinding;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.util.AlarmHelper;
 import com.product.tabletmanager.viewmodel.DrugViewModel;
@@ -54,7 +56,7 @@ public class FindDrugFragment extends Fragment implements TimeClickDialogFragmen
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        com.product.tabletmanager.databinding.FragmentFindDrugBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_find_drug, container, false);
+        FragmentFindDrugBinding binding = DataBindingUtil.inflate(inflater, R.layout.fragment_find_drug, container, false);
         binding.setViewmodel(mDrugViewModel);
         return binding.getRoot();
     }
@@ -105,10 +107,10 @@ public class FindDrugFragment extends Fragment implements TimeClickDialogFragmen
         textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         textView.setText(getTimeStringByDate(mChosenTime));
         textView.setOnClickListener(v -> {
-                    TimeClickDialogFragment fragment = TimeClickDialogFragment.newInstance(
-                            textView, this);
-                    fragment.show(getChildFragmentManager(), TimeClickDialogFragment.class.getSimpleName());
-                });
+            TimeClickDialogFragment fragment = TimeClickDialogFragment.newInstance(
+                    textView, this);
+            fragment.show(getChildFragmentManager(), TimeClickDialogFragment.class.getSimpleName());
+        });
         mTimeRootView.addView(textView, getTimeChildViewIndex(mTimeRootView));
     }
 
@@ -160,9 +162,28 @@ public class FindDrugFragment extends Fragment implements TimeClickDialogFragmen
         });
 
         view.findViewById(R.id.drug_add_time).setOnClickListener(this::showTimePickerDialog);
+        view.findViewById(R.id.drug_start_date).setOnClickListener(v ->
+                showDatePickerDialog(R.string.date_picker_dialog_title_start_day));
+        view.findViewById(R.id.drug_due_date).setOnClickListener(v ->
+                showDatePickerDialog(R.string.date_picker_dialog_title_due_day));
         mTimeRootView = view.findViewById(R.id.drug_time_container);
         mRootView = view.findViewById(R.id.root_view);
         mRootView.setOnClickListener(v -> hideKeyboard());
+    }
+
+    private void showDatePickerDialog(int titleId) {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog mDatePicker = new DatePickerDialog(getContext(), (view1, year, month, dayOfMonth) -> {
+            Calendar selectedDate = Calendar.getInstance();
+            selectedDate.set(year, month, dayOfMonth);
+            if (titleId == R.string.date_picker_dialog_title_start_day) {
+                mDrugViewModel.selectStartDate(selectedDate);
+            } else {
+                mDrugViewModel.selectDueDate(selectedDate);
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE));
+        mDatePicker.setTitle(titleId);
+        mDatePicker.show();
     }
 
     @Override

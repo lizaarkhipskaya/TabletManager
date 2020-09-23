@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.product.tabletmanager.R;
 import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.TimeInfoAdapter;
+import com.product.tabletmanager.util.CommonUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +54,10 @@ public class DrugInfoFragment extends Fragment {
        // ((ImageView) view.findViewById(R.id.drug_info_form)).setText(drug.getForm().name()); todo
         //  //((TextView) view.findViewById(R.id.drug_info_user_name)).setText(drug.getUserName());
         ((TextView) view.findViewById(R.id.drug_info_dosage)).setText(String.valueOf(drug.getDosage()));
+        ((TextView)view.findViewById(R.id.drug_info_start_date)).setText(
+                CommonUtils.getInstance().getDateString(drug.getStartDate()));
+        ((TextView)view.findViewById(R.id.drug_info_due_date)).setText(
+                CommonUtils.getInstance().getDateString(drug.getEndDate()));
         mTimeRV = view.findViewById(R.id.time_recycler_view);
         mTimeRV.setLayoutManager(new GridLayoutManager(getContext(), 2));
         setupAdapter();

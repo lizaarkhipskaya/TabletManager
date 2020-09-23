@@ -95,9 +95,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/drug_info_start_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12/06"
                 android:textSize="26sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -128,9 +128,9 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/drug_info_due_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12/06"
                 android:textSize="26sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"

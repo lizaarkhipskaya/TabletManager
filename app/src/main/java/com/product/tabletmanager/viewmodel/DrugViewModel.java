@@ -9,9 +9,12 @@ import com.product.tabletmanager.model.Drug;
 import com.product.tabletmanager.model.DrugRepository;
 import com.product.tabletmanager.model.room.RoomRepository;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class DrugViewModel extends ViewModel {
@@ -21,11 +24,13 @@ public class DrugViewModel extends ViewModel {
     private Drug mDrug;
     private DrugRepository mRepository;
 
-    public ObservableField<Drug.FORM> mForm = new ObservableField<>();
-    public ObservableField<String> mName = new ObservableField<>();
-    public String mUserName;
-    public int mDosage;
-    public Set<Calendar> mDayTime = new HashSet<>();
+    private ObservableField<Drug.FORM> mForm = new ObservableField<>();
+    private ObservableField<String> mName = new ObservableField<>();
+    private String mUserName;
+    private int mDosage;
+    private Set<Calendar> mDayTime = new HashSet<>();
+    private ObservableField<Calendar> mStartDate = new ObservableField<>();
+    private ObservableField<Calendar> mDueDate = new ObservableField<>();
     public List<Drug.DEPENDS_ON_FOOD> mDependsOnFood;
 
     public DrugViewModel() {
@@ -42,9 +47,24 @@ public class DrugViewModel extends ViewModel {
 
     private void updateDrug() {
         if (mName.get() != null) {
-            mDrug = new Drug(mForm.get(), mName.get(), mUserName, null, null, mDosage, mDayTime);
+            Date startDate = null;
+            Date dueDate = null;
+            if (mStartDate.get() != null)
+                startDate = new Date(mStartDate.get().getTimeInMillis());
+            if (mDueDate.get() != null)
+                dueDate = new Date(mDueDate.get().getTimeInMillis());
+            mDrug = new Drug(mForm.get(), mName.get(), mUserName, startDate,
+                    dueDate, mDosage, mDayTime);
             mDrugLiveDate.postValue(mDrug);
         }
+    }
+
+    public ObservableField<Calendar> getStartDateLiveData() {
+        return mStartDate;
+    }
+
+    public ObservableField<Calendar> getDueDateLiveData() {
+        return mDueDate;
     }
 
     public void selectForm(Drug.FORM form) {
@@ -54,6 +74,16 @@ public class DrugViewModel extends ViewModel {
 
     public void selectName(String name) {
         mName.set(name);
+        updateDrug();
+    }
+
+    public void selectStartDate(Calendar startDate) {
+        mStartDate.set(startDate);
+        updateDrug();
+    }
+
+    public void selectDueDate(Calendar dueDate) {
+        mDueDate.set(dueDate);
         updateDrug();
     }
 
@@ -74,5 +104,16 @@ public class DrugViewModel extends ViewModel {
 
     boolean canSaveDrug() {
         return mForm.get() != null && mName.get() != null && !mName.get().isEmpty();
+    }
+
+    public String getDateString(ObservableField<Calendar> date) {
+        Calendar dateCalendar = date.get();
+        if (dateCalendar == null) {
+            if (date.equals(mStartDate))
+                return "Start date";
+            return "Due date";
+        }
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M\\d", Locale.getDefault());
+        return simpleDateFormat.format(dateCalendar.getTime());
     }
 }

@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TabletManager</string>
+
+    <string name="date_picker_dialog_title_start_day">Start date:</string>
+    <string name="date_picker_dialog_title_due_day">Due date:</string>
 </resources>
