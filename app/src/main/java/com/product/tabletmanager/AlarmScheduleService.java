@@ -21,6 +21,6 @@ public class AlarmScheduleService extends LifecycleService {
         MediatorLiveData<List<Drug>> mediatorLiveData = new MediatorLiveData<>();
         mediatorLiveData.addSource(RoomRepository.getInstance().getAllDrugs(), mediatorLiveData::setValue);
         mediatorLiveData.observe(this, list ->
-                AlarmHelper.setAlarm(getApplicationContext(), list));
+                AlarmHelper.getInstance().setAlarm(getApplicationContext(), list));
     }
 }

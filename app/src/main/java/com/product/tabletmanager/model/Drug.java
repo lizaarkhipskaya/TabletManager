@@ -1,20 +1,36 @@
 package com.product.tabletmanager.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.util.ArraySet;
+
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
-import java.io.Serializable;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 @Entity(tableName = "drug_table")
-public class Drug implements Serializable {
+public class Drug implements Parcelable {
+
+    public static Creator<Drug> CREATOR = new Creator<Drug>() {
+
+        @Override
+        public Drug createFromParcel(Parcel source) {
+            return new Drug(source);
+        }
+
+        @Override
+        public Drug[] newArray(int size) {
+            return new Drug[size];
+        }
+
+    };
 
     @TypeConverters({FormConverter.class})
     private FORM mForm;
@@ -44,8 +60,42 @@ public class Drug implements Serializable {
         mDayTime = dayTime;
     }
 
+    public Drug(Parcel in) {
+        mForm = FORM.valueOf(in.readString());
+        mName = in.readString();
+        mUserName = in.readString();
+        mDosage = in.readInt();
+        mStartDate = new Date(in.readLong());
+        mEndDate = new Date(in.readLong());
+        mDayTime = new ArraySet<>();
+        IntStream.range(0, in.readInt()).forEach(
+                i -> {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTimeInMillis(in.readLong());
+                    mDayTime.add(calendar);
+                });
+    }
+
     public void setDependsOnFood(List<DEPENDS_ON_FOOD> mDependsOnFood) {
         this.mDependsOnFood = mDependsOnFood;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.mForm.toString());
+        dest.writeString(this.mName);
+        dest.writeString(this.mUserName);
+        dest.writeInt(this.mDosage);
+        dest.writeLong(this.mStartDate.getTime());
+        dest.writeLong(this.mEndDate.getTime());
+        dest.writeInt(mDayTime.size() - 1);
+        mDayTime.forEach(calendar ->
+                dest.writeLong(calendar.getTimeInMillis()));
     }
 
     public enum FORM {PILL, LIQUID, CAPSULE}

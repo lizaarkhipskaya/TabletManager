@@ -13,7 +13,6 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -78,7 +77,19 @@ public class DrugViewModel extends ViewModel {
 
     public void selectStartDate(Calendar startDate) {
         mStartDate.set(startDate);
+        for (Calendar time : mDayTime) {
+            setStartDateForTime(time);
+        }
         updateDrug();
+    }
+
+    private void setStartDateForTime(Calendar time) {
+        if (mStartDate.get() != null) {
+            Calendar startDate = mStartDate.get();
+            time.set(Calendar.DAY_OF_MONTH, startDate.get(Calendar.DAY_OF_MONTH));
+            time.set(Calendar.MONTH, startDate.get(Calendar.MONTH));
+            time.set(Calendar.YEAR, startDate.get(Calendar.YEAR));
+        }
     }
 
     public void selectDueDate(Calendar dueDate) {
@@ -87,6 +98,7 @@ public class DrugViewModel extends ViewModel {
     }
 
     public void setDayTime(Calendar calendar) {
+        setStartDateForTime(calendar);
         mDayTime.add(calendar);
         updateDrug();
     }
