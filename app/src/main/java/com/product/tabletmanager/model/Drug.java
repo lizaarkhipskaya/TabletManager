@@ -3,6 +3,7 @@ package com.product.tabletmanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.ArraySet;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -12,6 +13,7 @@ import androidx.room.TypeConverters;
 import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -96,6 +98,39 @@ public class Drug implements Parcelable {
         dest.writeInt(mDayTime.size() - 1);
         mDayTime.forEach(calendar ->
                 dest.writeLong(calendar.getTimeInMillis()));
+    }
+
+    @Override
+    public String toString() {
+        return "Drug{" +
+                "mForm=" + mForm +
+                ", mName='" + mName + '\'' +
+                ", mUserName='" + mUserName + '\'' +
+                ", mDosage=" + mDosage +
+                ", mStartDate=" + mStartDate.getTime() +
+                ", mEndDate=" + mEndDate.getTime() +
+                ", mDependsOnFood=" + mDependsOnFood +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Drug)) return false;
+        Drug drug = (Drug) o;
+        return mDosage == drug.mDosage &&
+                mForm == drug.mForm &&
+                mName.equals(drug.mName) &&
+                Objects.equals(mUserName, drug.mUserName) &&
+                Objects.equals(mStartDate, drug.mStartDate) &&
+                Objects.equals(mEndDate, drug.mEndDate) &&
+                Objects.equals(mDayTime, drug.mDayTime) &&
+                Objects.equals(mDependsOnFood, drug.mDependsOnFood);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mForm, mName, mUserName, mDosage, mStartDate, mEndDate, mDayTime, mDependsOnFood);
     }
 
     public enum FORM {PILL, LIQUID, CAPSULE}

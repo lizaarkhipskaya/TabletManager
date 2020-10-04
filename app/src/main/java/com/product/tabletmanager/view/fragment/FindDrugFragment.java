@@ -65,7 +65,7 @@ public class FindDrugFragment extends Fragment implements TimeClickDialogFragmen
         mDrugViewModel.getSaveLiveData().observe(this, saved -> {
             if (saved) {
                 Log.d(LOG_TAG, "drug saved successfully" + saved.toString());
-                AlarmHelper.setAlarm(getContext(), mDrugViewModel.getDrugLiveDate().getValue());
+                AlarmHelper.getInstance().setAlarm(getContext(), mDrugViewModel.getDrugLiveDate().getValue());
                 Toast.makeText(getContext(), "Drug saved successfully", Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(getActivity(), R.id.nav_host_fragment).popBackStack();
             } else {

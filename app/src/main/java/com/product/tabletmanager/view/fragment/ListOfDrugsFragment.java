@@ -62,7 +62,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
         drugListAdapter.setOnRemoveClickListener(this);
         drugListAdapter.setOnItemClickListener(((view1, drug) -> {
             Bundle args = new Bundle();
-            args.putSerializable(DrugInfoFragment.KEY, drug);
+            args.putParcelable(DrugInfoFragment.KEY, drug);
             mController.navigate(R.id.drugInfoFragment, args);
         }));
 
@@ -83,7 +83,7 @@ public class ListOfDrugsFragment extends Fragment implements DrugListAdapter.OnC
 
     @Override
     public void onDeleteClick() {
-        AlarmHelper.cancelAlarm(getContext(), viewModel.getDrugForClear());
+        AlarmHelper.getInstance().cancelAlarm(getContext(), viewModel.getDrugForClear());
         viewModel.clearDrug();
         Toast.makeText(getContext(), "Remove drug successfully", Toast.LENGTH_SHORT).show();
     }

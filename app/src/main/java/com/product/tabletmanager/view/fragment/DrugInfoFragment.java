@@ -38,7 +38,7 @@ public class DrugInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         if (args != null) {
-            drug = (Drug) args.getSerializable(KEY);
+            drug = (Drug) args.getParcelable(KEY);
         }
     }
 
