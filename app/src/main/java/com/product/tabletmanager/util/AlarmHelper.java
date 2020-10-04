@@ -32,16 +32,22 @@ public class AlarmHelper {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         for (Calendar time : drug.getDayTime()) {
             Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-            alarmIntent.putExtra(AlarmReceiver.TITLE_KEY, drug.getName());
-            alarmIntent.putExtra(AlarmReceiver.CONTENT_KEY, drug.getForm());
+            Bundle bundle = new Bundle();
+            bundle.putString(AlarmReceiver.KEY_DRUG_NAME, drug.getName());
+            bundle.putString(AlarmReceiver.KEY_DRAG_FORM, drug.getForm().toString());
+            bundle.putLong(AlarmReceiver.KEY_DRAG_TIME, time.getTimeInMillis());
+            bundle.putInt(AlarmReceiver.KEY_DRAG_DOSAGE, drug.getDosage());
+            alarmIntent.putExtras(bundle);
+
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    CommonUtils.getInstance().getIdentifier(drug, time), alarmIntent, 0);
+                    CommonUtils.getInstance().getIdentifier(drug, time), alarmIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
 
             if (pendingIntent != null) {
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                         time.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-                Log.d(LOG_TAG, "scheduleAlarm: set repeating for " + drug.getName() + " time "
-                        + time.getTime().toString()); //todo user friendly time
+                Log.d(LOG_TAG, String.format("scheduleAlarm: name:%s, form:%s, dosage:%d, timeInMiles:%d",
+                        drug.getName(), drug.getForm().toString(), drug.getDosage(), time.getTimeInMillis()));//todo user friendly time
             } else {
                 Log.e(LOG_TAG, "scheduleAlarm: pending intent is null");
             }
