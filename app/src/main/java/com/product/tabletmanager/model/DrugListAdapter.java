@@ -7,13 +7,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.product.tabletmanager.R;
+import com.product.tabletmanager.util.CommonUtils;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Set;
 
 public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHolder> {
 
@@ -35,7 +37,7 @@ public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHo
         this.onRemoveClickListener = onRemoveClickListener;
     }
 
-    public void setOnItemClickListener(OnClickListener onItemClickListener){
+    public void setOnItemClickListener(OnClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -64,23 +66,26 @@ public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHo
         ImageView form;
         TextView name;
         ImageView remove;
+        TextView time;
 
         ViewHolder(@NonNull View itemView) {
             super(itemView);
             form = itemView.findViewById(R.id.form);
             name = itemView.findViewById(R.id.name);
             remove = itemView.findViewById(R.id.btn_remove);
+            time = itemView.findViewById(R.id.next_time);
         }
 
         void bindView(Drug drug, View.OnClickListener listener) {
             form.setImageResource(getImageResIdByForm(drug.getForm()));
             name.setText(drug.getName());
+            time.setText(gitNextUsageTime(drug));
             remove.setOnClickListener(listener);
         }
 
         @DrawableRes
-        private int getImageResIdByForm(Drug.FORM form){
-            switch (form){
+        private int getImageResIdByForm(Drug.FORM form) {
+            switch (form) {
                 case PILL:
                     return R.drawable.ic_pill;
                 case CAPSULE:
@@ -90,6 +95,20 @@ public class DrugListAdapter extends RecyclerView.Adapter<DrugListAdapter.ViewHo
                 default:
                     return R.drawable.ic_pill;
             }
+        }
+
+        private String gitNextUsageTime(Drug drug) {
+            Calendar timeNow = Calendar.getInstance();
+            timeNow.setTimeInMillis(System.currentTimeMillis());
+
+            Set<Calendar> times = drug.getDayTime();
+            Calendar timeForDisplaying = times.stream()
+                    .filter(c -> c.get(Calendar.HOUR_OF_DAY) > timeNow.get(Calendar.HOUR_OF_DAY) ||
+                            (c.get(Calendar.HOUR_OF_DAY) == timeNow.get(Calendar.HOUR_OF_DAY) &&
+                                    c.get(Calendar.MINUTE) > timeNow.get(Calendar.MINUTE)))
+                    .findFirst()
+                    .orElse(times.stream().findFirst().get()); //todo
+            return CommonUtils.getInstance().getTimeString(timeForDisplaying);
         }
     }
 

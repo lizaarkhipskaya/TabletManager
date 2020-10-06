@@ -30,4 +30,9 @@ public class CommonUtils {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("M\\d", Locale.getDefault());
         return simpleDateFormat.format(date);
     }
+
+    public String getTimeString(Calendar date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+        return simpleDateFormat.format(date.getTime());
+    }
 }
