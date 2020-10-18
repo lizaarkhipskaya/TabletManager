@@ -18,6 +18,10 @@
             android:name=".AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
+        <receiver
+            android:name=".NotificationActionDoneReceiver"
+            android:enabled="true"
+            android:exported="true" />
         <receiver android:name=".SystemBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -37,6 +41,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.ConfirmationDialogActivity"
+            android:theme="@style/Theme.Transparent"/>
     </application>
 
 </manifest>

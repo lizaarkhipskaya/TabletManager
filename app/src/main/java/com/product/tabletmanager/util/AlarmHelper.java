@@ -35,8 +35,9 @@ public class AlarmHelper {
             Bundle bundle = new Bundle();
             bundle.putString(AlarmReceiver.KEY_DRUG_NAME, drug.getName());
             bundle.putString(AlarmReceiver.KEY_DRAG_FORM, drug.getForm().toString());
-            bundle.putLong(AlarmReceiver.KEY_DRAG_TIME, time.getTimeInMillis());
             bundle.putInt(AlarmReceiver.KEY_DRAG_DOSAGE, drug.getDosage());
+            bundle.putLong(AlarmReceiver.KEY_DRAG_TIME, time.getTimeInMillis());
+            /*bundle.putParcelable(AlarmReceiver.KEY_DRUG, drug);*/
             alarmIntent.putExtras(bundle);
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
@@ -84,7 +85,8 @@ public class AlarmHelper {
                     CommonUtils.getInstance().getIdentifier(drug, time), alarmIntent, 0);
 
             if (pendingIntent != null) {
-                Log.d(LOG_TAG, "cancelAlarm: " + time.getTime().toString());
+                Log.d(LOG_TAG, String.format("cancelAlarm: %s %s", drug.getName(),
+                        time.getTime().toString()));
                 alarmManager.cancel(pendingIntent);
             } else {
                 Log.e(LOG_TAG, "cancelAlarm: pending intent is null");

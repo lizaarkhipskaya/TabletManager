@@ -35,7 +35,6 @@ public class RoomRepository implements DrugRepository {
 
     @Override
     public LiveData<List<Drug>> getAllDrugs() {
-        Log.d("my_t", "getAllDrugs");
         return allDrugs;
     }
 

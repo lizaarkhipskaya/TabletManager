@@ -70,12 +70,12 @@ public class Drug implements Parcelable {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
         mDayTime = new ArraySet<>();
-        IntStream.range(0, in.readInt()).forEach(
+/*        IntStream.range(0, in.readInt()).forEach(
                 i -> {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(in.readLong());
                     mDayTime.add(calendar);
-                });
+                });*/
     }
 
     public void setDependsOnFood(List<DEPENDS_ON_FOOD> mDependsOnFood) {
@@ -94,10 +94,10 @@ public class Drug implements Parcelable {
         dest.writeString(this.mUserName);
         dest.writeInt(this.mDosage);
         dest.writeLong(this.mStartDate.getTime());
-        dest.writeLong(this.mEndDate.getTime());
+        dest.writeLong(this.mEndDate.getTime());/*
         dest.writeInt(mDayTime.size() - 1);
         mDayTime.forEach(calendar ->
-                dest.writeLong(calendar.getTimeInMillis()));
+                dest.writeLong(calendar.getTimeInMillis()));*/
     }
 
     @Override
