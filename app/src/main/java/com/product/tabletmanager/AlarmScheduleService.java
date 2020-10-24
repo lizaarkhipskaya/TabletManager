@@ -1,7 +1,9 @@
 package com.product.tabletmanager;
 
+import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleService;
 import androidx.lifecycle.MediatorLiveData;
 
@@ -17,11 +19,18 @@ public class AlarmScheduleService extends LifecycleService {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate: ");
+        Log.d(TAG, "onCreate:");
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        super.onStartCommand(intent, flags, startId);
+        Log.d(TAG, "onStartCommand: "+intent+flags);
         MediatorLiveData<List<Drug>> mediatorLiveData = new MediatorLiveData<>();
         mediatorLiveData.addSource(RoomRepository.getInstance().getAllDrugs(), mediatorLiveData::setValue);
         mediatorLiveData.observe(this, list ->
                 AlarmHelper.getInstance().setAlarm(getApplicationContext(), list));
         stopSelf();
+        return START_REDELIVER_INTENT;
     }
 }

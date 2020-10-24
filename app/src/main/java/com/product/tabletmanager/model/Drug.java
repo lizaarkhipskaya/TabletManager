@@ -3,7 +3,6 @@ package com.product.tabletmanager.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.ArraySet;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -15,7 +14,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 @Entity(tableName = "drug_table")
 public class Drug implements Parcelable {
